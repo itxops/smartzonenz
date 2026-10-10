@@ -1,7 +1,7 @@
 /* ==========================================================================
    SmartZone — Phone Repair Timaru
    Plain CSS, no build step. Brand + type tokens live in :root.
-   Type: Bricolage Grotesque (display) · Instrument Serif (accent) · Plus Jakarta Sans (body)
+   Type: Bricolage Grotesque (all text) · Instrument Serif (italic accents)
    ========================================================================== */
 
 :root {
@@ -34,9 +34,9 @@
   --line: #ECE7DF;
 
   /* Type */
-  --font-display: "Bricolage Grotesque", "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
-  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   /* Shape + depth */
   --radius-sm: 10px;
@@ -76,10 +76,10 @@ button { font: inherit; cursor: pointer; border: 0; background: none; color: inh
 
 h1, h2, h3 {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 650;
   line-height: 1;
   letter-spacing: -.022em;
-  font-variation-settings: "wdth" 92;
+  font-variation-settings: normal;
   text-wrap: balance;
 }
 /* Serif italic accent inside headings */
@@ -120,7 +120,7 @@ h1 em, h2 em { font-size: 1.05em; line-height: .9; padding-right: .04em; }
   position: relative; overflow: hidden; isolation: isolate;
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   padding: 14px 24px; border-radius: 999px;
-  font-family: var(--font-body); font-size: 14px; font-weight: 700; letter-spacing: .01em;
+  font-family: var(--font-body); font-size: 14.5px; font-weight: 600; letter-spacing: 0;
   white-space: nowrap;
   transition: background-color .25s var(--ease), color .25s, border-color .25s, box-shadow .35s var(--ease), transform .35s var(--ease);
 }
@@ -307,7 +307,7 @@ h1 em, h2 em { font-size: 1.05em; line-height: .9; padding-right: .04em; }
 .status-badge.is-closed .pulse::after { display: none; }
 @keyframes ping { 75%, 100% { transform: scale(2.6); opacity: 0; } }
 
-.hero-title { font-size: clamp(2.4rem, 5.2vw, 4.25rem); line-height: 1; letter-spacing: -.03em; font-weight: 700; }
+.hero-title { font-size: clamp(2.4rem, 5.2vw, 4.25rem); line-height: 1.02; letter-spacing: -.03em; font-weight: 650; }
 .hero-title em { display: inline-block; background: linear-gradient(100deg, var(--brand) 10%, var(--brand-soft) 90%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .hero-lead { margin-top: 22px; max-width: 480px; font-size: 16.5px; line-height: 1.75; color: var(--text-on-dark-muted); }
 .hero-lead strong { color: #fff; font-weight: 700; }
@@ -389,7 +389,7 @@ h1 em, h2 em { font-size: 1.05em; line-height: .9; padding-right: .04em; }
 .stat { padding: 26px 12px; text-align: center; border-bottom: 1px solid var(--line); }
 .stat:nth-child(odd) { border-right: 1px solid var(--line); }
 .stat:nth-child(n+3) { border-bottom: 0; }
-.stat strong { display: block; font-family: var(--font-display); font-size: clamp(28px, 3.4vw, 42px); font-weight: 700; letter-spacing: -.03em; line-height: 1; color: var(--text); font-variation-settings: "wdth" 90; }
+.stat strong { display: block; font-family: var(--font-display); font-size: clamp(28px, 3.4vw, 42px); font-weight: 700; letter-spacing: -.03em; line-height: 1; color: var(--text); }
 .stat strong em { margin-left: 4px; font-size: .78em; }
 .stat small { display: block; margin-top: 8px; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
 @media (min-width: 900px) {
@@ -519,7 +519,7 @@ h1 em, h2 em { font-size: 1.05em; line-height: .9; padding-right: .04em; }
 .glance-glow { position: absolute; z-index: -1; top: -45%; right: -45%; width: 460px; height: 460px; border-radius: 50%; background: radial-gradient(circle, rgba(240,120,0,.4), transparent 65%); }
 .glance-title { font-size: 12px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--brand); }
 .glance-hero { margin-top: 20px; padding-bottom: 24px; border-bottom: 1px solid var(--ink-line); }
-.glance strong { display: block; font-family: var(--font-display); font-weight: 700; letter-spacing: -.045em; line-height: 1; font-variation-settings: "wdth" 88; }
+.glance strong { display: block; font-family: var(--font-display); font-weight: 700; letter-spacing: -.045em; line-height: 1; }
 .glance strong em { font-size: .8em; margin-left: 2px; }
 .glance-hero strong { font-size: clamp(48px, 5vw, 62px); }
 .glance-hero span, .glance-pair span { display: block; margin-top: 8px; font-size: 13.5px; font-weight: 500; color: var(--text-on-dark-muted); }
@@ -644,7 +644,7 @@ h1 em, h2 em { font-size: 1.05em; line-height: .9; padding-right: .04em; }
 .footer-big {
   padding-bottom: 40px; margin-bottom: 48px; border-bottom: 1px solid var(--ink-line);
   font-family: var(--font-display); font-size: clamp(2.1rem, 6.5vw, 5.2rem); font-weight: 700; line-height: .95; letter-spacing: -.035em;
-  font-variation-settings: "wdth" 88;
+ 
   color: rgba(255,255,255,.92);
 }
 .footer-big em { font-size: 1.05em; }
@@ -731,4 +731,50 @@ h1 em, h2 em { font-size: 1.05em; line-height: .9; padding-right: .04em; }
   .footer-big { font-size: 2.2rem; }
   .ticker-track span { font-size: 17px; }
   .ticker-track span:nth-of-type(even) { font-size: 19px; }
+}
+
+/* Tablet: single-column hero, landscape photo so content isn't pushed far down */
+@media (max-width: 1023px) {
+  .hero-inner { gap: 48px; }
+  .hero-visual { max-width: 620px; padding: 16px 10px 8px; }
+  .hero-frame { aspect-ratio: 16 / 11; transform: rotate(0); border-radius: 26px; }
+  .hero-ring { inset: -10% 4%; }
+  .hero-frame-caption { display: none; }
+  .float-a { top: 6%; }
+  .float-b { top: auto; bottom: 30%; }
+  .float-c { bottom: 6%; }
+}
+
+/* Phones (incl. Android 360–412px) */
+@media (max-width: 639px) {
+  .hero-inner { gap: 36px; padding-bottom: 56px; }
+  .hero-visual { padding: 12px 6px 4px; }
+  .hero-frame { aspect-ratio: 5 / 4; border-radius: 22px; }
+  .hero-ring { display: none; }
+  .float-a { left: -2px; top: 4%; }
+  .float-b { right: -2px; bottom: 34%; }
+  .float-c { left: -2px; bottom: 4%; }
+  .float-card small { font-size: 11px; }
+  .hero-signals { gap: 10px 20px; }
+}
+@media (max-width: 380px) {
+  .hero-title { font-size: 2.1rem; }
+  .container { padding-inline: 16px; }
+  .float-card { gap: 9px; padding: 8px 12px 8px 8px; }
+  .float-card strong { font-size: 16px; }
+  .float-icon { width: 32px; height: 32px; font-size: 15px; border-radius: 9px; }
+}
+
+/* Short laptop screens (e.g. 1366×768, 1280×720): fit the hero above the fold */
+@media (min-width: 1024px) and (max-height: 860px) {
+  .hero { padding-top: calc(var(--header-h) + 36px); }
+  .hero-inner { padding-bottom: 56px; }
+  .hero-visual { max-width: 420px; padding-block: 12px; }
+  .hero-frame { aspect-ratio: 1 / 1; }
+  .hero-title { font-size: clamp(2.4rem, 4.4vw, 3.6rem); }
+  .status-badge { margin-bottom: 18px; }
+  .hero-lead { margin-top: 18px; }
+  .hero-ctas { margin-top: 24px; }
+  .hero-proof { margin-top: 22px; }
+  .hero-signals { margin-top: 20px; padding-top: 16px; }
 }
