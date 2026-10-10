@@ -29,22 +29,41 @@
     });
   }
 
-  /* ---------- Header shadow + mobile call bar ---------- */
+  /* ---------- Header state, scroll progress, call bar, back-to-top ---------- */
   var header = document.querySelector(".site-header");
   var callBar = document.querySelector(".call-bar");
+  var toTop = document.querySelector(".to-top");
+  var progress = document.querySelector(".scroll-progress span");
   var hero = document.querySelector(".hero");
+  var ticking = false;
 
   function onScroll() {
     var y = window.scrollY;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
     header.classList.toggle("is-scrolled", y > 10);
-    if (callBar && hero) {
-      var pastHero = y > hero.offsetHeight * 0.6;
-      var nearBottom = window.innerHeight + y >= document.body.scrollHeight - 120;
-      callBar.classList.toggle("is-visible", pastHero && !nearBottom);
-    }
+    if (progress) progress.style.setProperty("--p", max > 0 ? (y / max).toFixed(4) : 0);
+
+    var pastHero = hero ? y > hero.offsetHeight * 0.6 : y > 600;
+    var nearBottom = window.innerHeight + y >= document.documentElement.scrollHeight - 120;
+    if (callBar) callBar.classList.toggle("is-visible", pastHero && !nearBottom);
+    if (toTop) toTop.classList.toggle("is-visible", pastHero);
+    ticking = false;
   }
-  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("scroll", function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
+  }, { passive: true });
   onScroll();
+
+  /* ---------- Cursor spotlight on cards ---------- */
+  if (window.matchMedia("(hover: hover)").matches) {
+    document.querySelectorAll("[data-spotlight]").forEach(function (card) {
+      card.addEventListener("pointermove", function (e) {
+        var r = card.getBoundingClientRect();
+        card.style.setProperty("--mx", (e.clientX - r.left) + "px");
+        card.style.setProperty("--my", (e.clientY - r.top) + "px");
+      });
+    });
+  }
 
   /* ---------- Active nav link ---------- */
   var navLinks = document.querySelectorAll(".nav a[href^='#']");
@@ -81,8 +100,16 @@
     var revealObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          revealObserver.unobserve(entry.target);
+          var el = entry.target;
+          el.classList.add("is-visible");
+          revealObserver.unobserve(el);
+          // Hand control back to the element's own hover transitions once revealed
+          var delay = parseInt(el.style.getPropertyValue("--d"), 10) || 0;
+          setTimeout(function () {
+            el.removeAttribute("data-reveal");
+            el.classList.remove("is-visible");
+            el.style.removeProperty("--d");
+          }, 950 + delay);
         }
       });
     }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
