@@ -54,6 +54,29 @@
   }, { passive: true });
   onScroll();
 
+  /* ---------- Subtle parallax (uses the `translate` property so existing transforms stay intact) ---------- */
+  var parallaxEls = reduceMotion ? [] : Array.prototype.slice.call(document.querySelectorAll("[data-parallax]"));
+  var parallaxTicking = false;
+
+  function updateParallax() {
+    var vh = window.innerHeight;
+    parallaxEls.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > vh + 200) return;
+      var speed = parseFloat(el.getAttribute("data-parallax")) || 0;
+      var offset = (r.top + r.height / 2 - vh / 2) * speed;
+      el.style.translate = "0 " + Math.max(-60, Math.min(60, offset)).toFixed(1) + "px";
+    });
+    parallaxTicking = false;
+  }
+  if (parallaxEls.length) {
+    window.addEventListener("scroll", function () {
+      if (!parallaxTicking) { parallaxTicking = true; requestAnimationFrame(updateParallax); }
+    }, { passive: true });
+    window.addEventListener("resize", updateParallax);
+    updateParallax();
+  }
+
   /* ---------- Cursor spotlight on cards ---------- */
   if (window.matchMedia("(hover: hover)").matches) {
     document.querySelectorAll("[data-spotlight]").forEach(function (card) {
