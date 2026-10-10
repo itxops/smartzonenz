@@ -342,43 +342,120 @@ h1 em, h2 em { font-size: 1.05em; line-height: .9; padding-right: .04em; }
 .hero-signals li { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 500; color: #D4D4D8; }
 .hero-signals .icon { color: var(--brand); font-size: 17px; }
 
-/* Hero visual */
-.hero-visual { position: relative; max-width: 500px; width: 100%; margin-inline: auto; padding: 24px 10px; }
+/* Hero visual — animated phone (cracked → scanned → fixed) */
+.hero-visual {
+  position: relative; display: grid; place-items: center;
+  width: 100%; max-width: 480px; margin-inline: auto; padding: 36px 0;
+  perspective: 1400px;
+}
 .hero-ring {
-  position: absolute; z-index: -1; inset: -6% -10%; border-radius: 50%;
+  position: absolute; z-index: -1; left: 50%; top: 50%;
+  width: 460px; height: 460px; margin: -230px 0 0 -230px; border-radius: 50%;
   border: 1px dashed rgba(240,120,0,.35);
   animation: spin 60s linear infinite;
 }
+.hero-ring-2 { width: 340px; height: 340px; margin: -170px 0 0 -170px; border: 1px solid rgba(255,255,255,.06); animation-duration: 40s; animation-direction: reverse; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.hero-frame {
-  position: relative; overflow: hidden; aspect-ratio: 4 / 5;
-  border-radius: 32px; box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,.08);
-  transform: rotate(1.5deg); transition: transform .8s var(--ease);
+
+.device-wrap { position: relative; }
+.device {
+  --w: 268px;
+  position: relative; width: var(--w); aspect-ratio: 9 / 19; padding: 9px; border-radius: 46px;
+  background: linear-gradient(145deg, #52525B 0%, #1F2228 22%, #0F1115 60%, #52525B 100%);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.14),
+    inset 0 0 0 1.5px rgba(255,255,255,.08),
+    0 60px 100px -40px rgba(0,0,0,.9),
+    0 30px 90px -30px rgba(240,120,0,.45);
+  transform: rotateY(-14deg) rotateX(6deg) rotateZ(2deg);
+  transition: transform 1.1s var(--ease);
 }
-.hero-visual:hover .hero-frame { transform: rotate(0); }
-.hero-frame img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.05); transition: transform 1.4s var(--ease); }
-.hero-visual:hover .hero-frame img { transform: scale(1.1); }
-.hero-frame-shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,17,21,0) 45%, rgba(15,17,21,.85)); }
-.hero-frame-caption { position: absolute; left: 26px; right: 26px; bottom: 24px; }
-.hero-frame-caption .eyebrow::before { background: var(--brand); }
-.hero-frame-caption p { margin-top: 6px; font-family: var(--font-display); font-size: 19px; font-weight: 600; letter-spacing: -.02em; }
+.hero-visual:hover .device { transform: rotateY(-4deg) rotateX(2deg) rotateZ(0); }
+.device-btn { position: absolute; width: 3px; border-radius: 3px; background: #52525B; }
+.device-btn-power { right: -3px; top: 26%; height: 13%; }
+.device-btn-vol { left: -3px; top: 20%; height: 17%; }
+.device-shadow {
+  position: absolute; z-index: -1; left: 6%; right: 6%; bottom: -36px; height: 48px; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(240,120,0,.4), transparent 70%); filter: blur(12px);
+}
+
+.device-screen {
+  position: relative; height: 100%; overflow: hidden; border-radius: 38px;
+  display: flex; flex-direction: column; gap: 12px; padding: 12px 14px 16px;
+  background: radial-gradient(120% 70% at 50% 0%, #1F2228 0%, #0F1115 62%);
+  color: #fff; font-family: var(--font-body);
+}
+.ds-statusbar { display: flex; align-items: center; justify-content: space-between; padding: 2px 8px 0; font-size: 12px; font-weight: 600; }
+.ds-camera { width: 72px; height: 21px; border-radius: 999px; background: #000; }
+.ds-sys { display: flex; align-items: flex-end; gap: 2px; }
+.ds-sys i { width: 3px; border-radius: 1px; background: #fff; }
+.ds-sys i:nth-child(1) { height: 5px; } .ds-sys i:nth-child(2) { height: 7px; } .ds-sys i:nth-child(3) { height: 9px; }
+.ds-sys b { width: 20px; height: 10px; margin-left: 5px; border-radius: 3px; border: 1.5px solid rgba(255,255,255,.8); background: linear-gradient(90deg, #fff 70%, transparent 70%) content-box; padding: 1px; }
+
+.ds-brand img { height: 24px; width: auto; margin: 4px auto 0; }
+
+.ds-card { padding: 14px; border-radius: 18px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); }
+.ds-card small { display: block; font-size: 9.5px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: #A1A1AA; }
+.ds-card strong { display: block; margin-top: 4px; font-family: var(--font-display); font-size: 15px; font-weight: 650; letter-spacing: -.01em; white-space: nowrap; }
+.ds-progress { height: 6px; margin: 12px 0 10px; border-radius: 999px; background: rgba(255,255,255,.1); overflow: hidden; }
+.ds-progress span { display: block; height: 100%; width: 6%; border-radius: inherit; background: linear-gradient(90deg, var(--brand), var(--brand-soft)); transition: width .7s var(--ease); }
+.ds-steps { display: grid; gap: 8px; }
+.ds-step { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #A1A1AA; transition: color .4s; }
+.ds-step i { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.2); color: var(--ink); font-size: 11px; transition: background-color .4s, border-color .4s; }
+.ds-step i .icon { stroke-width: 3.5; opacity: 0; transition: opacity .3s; }
+
+.ds-done {
+  margin-top: auto; display: grid; justify-items: center; gap: 2px; padding: 16px 12px; border-radius: 18px; text-align: center;
+  background: rgba(240,120,0,.12); border: 1px solid rgba(240,120,0,.35);
+  opacity: 0; transform: translateY(12px) scale(.96); transition: opacity .5s var(--ease), transform .6s var(--ease);
+}
+.ds-done-badge { display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 6px; border-radius: 50%; background: var(--brand); color: var(--ink); font-size: 22px; box-shadow: 0 0 0 6px rgba(240,120,0,.18); }
+.ds-done-badge .icon { stroke-width: 3; }
+.ds-done strong { font-family: var(--font-display); font-size: 18px; font-weight: 650; }
+.ds-done small { font-size: 12px; color: #D4D4D8; }
+.ds-time { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; color: #A1A1AA; }
+.ds-time .icon { color: var(--brand); font-size: 13px; }
+
+.ds-crack { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; clip-path: inset(0 0 0 0); transition: opacity .6s; }
+.ds-scan {
+  position: absolute; left: 0; right: 0; top: -90px; height: 90px; pointer-events: none; opacity: 0;
+  background: linear-gradient(180deg, transparent, rgba(240,120,0,.28) 80%, rgba(255,159,19,.85));
+  box-shadow: 0 2px 14px rgba(255,159,19,.8);
+  transition: opacity .3s;
+}
+.ds-glare { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, rgba(255,255,255,.1) 0%, transparent 32%); }
+
+/* Stage classes are set by main.js: is-s1 diagnosed · is-stage-2 scanning · is-s3 ready · is-s4 done */
+.is-s1 .ds-progress span { width: 33%; }
+.is-stage-2 .ds-progress span { width: 82%; transition: width 2.4s linear; }
+.is-s3 .ds-progress span { width: 100%; }
+.is-s1 .ds-step-1, .is-s3 .ds-step-2, .is-s3 .ds-step-3, .is-stage-2 .ds-step-2 { color: #fff; }
+.is-s1 .ds-step-1 i, .is-s3 .ds-step-2 i, .is-s3 .ds-step-3 i { background: var(--brand); border-color: var(--brand); }
+.is-s1 .ds-step-1 i .icon, .is-s3 .ds-step-2 i .icon, .is-s3 .ds-step-3 i .icon { opacity: 1; }
+.is-stage-2 .ds-step-2 i { border-color: var(--brand); animation: dsPulse 1s ease-in-out infinite; }
+@keyframes dsPulse { 50% { box-shadow: 0 0 0 5px rgba(240,120,0,.25); } }
+.is-stage-2 .ds-scan { top: 100%; opacity: 1; transition: top 2.4s linear, opacity .2s; }
+.is-s3 .ds-scan { top: 100%; opacity: 0; }
+.is-stage-2 .ds-crack, .is-s3 .ds-crack { clip-path: inset(100% 0 0 0); transition: clip-path 2.4s linear; }
+.is-s4 .ds-crack { clip-path: inset(100% 0 0 0); opacity: 0; }
+.is-s4 .ds-done { opacity: 1; transform: none; }
 
 .float-card {
   position: absolute; z-index: 3; display: flex; align-items: center; gap: 12px;
   padding: 12px 18px 12px 12px; border-radius: 18px;
-  background: rgba(255,255,255,.95); color: var(--text);
+  background: rgba(255,255,255,.96); color: var(--text);
   box-shadow: 0 24px 48px -18px rgba(0,0,0,.6);
   animation: float 6s ease-in-out infinite;
 }
 .float-card strong { display: block; font-family: var(--font-display); font-size: 18px; font-weight: 700; letter-spacing: -.02em; line-height: 1; }
 .float-card small { display: block; margin-top: 4px; font-size: 12px; font-weight: 500; color: var(--text-muted); }
 .float-icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; background: var(--brand); color: var(--ink); font-size: 18px; }
-.float-a { left: -8px; top: 12%; }
-.float-b { right: -8px; top: 44%; animation-delay: -2s; }
+.float-a { left: 0; top: 50%; }
+.float-b { right: 0; top: 17%; animation-delay: -2s; }
 .float-b .float-icon { background: var(--ink); color: var(--brand); }
-.float-c { left: -8px; bottom: 27%; animation-delay: -4s; }
+.float-c { right: 0; bottom: 9%; animation-delay: -4s; }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-@media (min-width: 1240px) { .float-a { left: -48px; } .float-b { right: -40px; } .float-c { left: -36px; } }
+@media (min-width: 1240px) { .float-a { left: -40px; } .float-b { right: -36px; } .float-c { right: -24px; } }
 
 /* Brand ticker */
 .ticker {
@@ -719,11 +796,9 @@ h1 em, h2 em { font-size: 1.05em; line-height: .9; padding-right: .04em; }
 
 /* Small screens: keep the hero photo uncluttered */
 @media (max-width: 639px) {
-  .hero-frame-caption { display: none; }
   .float-card { padding: 10px 14px 10px 10px; }
   .float-card strong { font-size: 19px; }
   .float-icon { width: 36px; height: 36px; font-size: 17px; }
-  .float-c { bottom: 12%; }
 }
 
 /* Small screens: comfortable reading sizes */
@@ -746,24 +821,11 @@ h1 em, h2 em { font-size: 1.05em; line-height: .9; padding-right: .04em; }
 /* Tablet: single-column hero, landscape photo so content isn't pushed far down */
 @media (max-width: 1023px) {
   .hero-inner { gap: 48px; }
-  .hero-visual { max-width: 620px; padding: 16px 10px 8px; }
-  .hero-frame { aspect-ratio: 16 / 11; transform: rotate(0); border-radius: 26px; }
-  .hero-ring { inset: -10% 4%; }
-  .hero-frame-caption { display: none; }
-  .float-a { top: 6%; }
-  .float-b { top: auto; bottom: 30%; }
-  .float-c { bottom: 6%; }
 }
 
 /* Phones (incl. Android 360–412px) */
 @media (max-width: 639px) {
   .hero-inner { gap: 36px; padding-bottom: 56px; }
-  .hero-visual { padding: 12px 6px 4px; }
-  .hero-frame { aspect-ratio: 5 / 4; border-radius: 22px; }
-  .hero-ring { display: none; }
-  .float-a { left: -2px; top: 4%; }
-  .float-b { right: -2px; bottom: 34%; }
-  .float-c { left: -2px; bottom: 4%; }
   .float-card small { font-size: 11px; }
   .hero-signals { gap: 10px 20px; }
 }
@@ -779,12 +841,32 @@ h1 em, h2 em { font-size: 1.05em; line-height: .9; padding-right: .04em; }
 @media (min-width: 1024px) and (max-height: 860px) {
   .hero { padding-top: calc(var(--header-h) + 36px); }
   .hero-inner { padding-bottom: 56px; }
-  .hero-visual { max-width: 420px; padding-block: 12px; }
-  .hero-frame { aspect-ratio: 1 / 1; }
   .hero-title { font-size: clamp(2.4rem, 4.4vw, 3.6rem); }
   .status-badge { margin-bottom: 18px; }
   .hero-lead { margin-top: 18px; }
   .hero-ctas { margin-top: 24px; }
   .hero-proof { margin-top: 22px; }
   .hero-signals { margin-top: 20px; padding-top: 16px; }
+}
+
+/* Hero phone sizing per viewport */
+@media (max-width: 1023px) {
+  .hero-visual { max-width: 460px; padding: 28px 0 40px; }
+  .device { --w: 250px; }
+}
+@media (max-width: 639px) {
+  .hero-visual { padding: 16px 0 36px; }
+  .device { --w: 228px; transform: rotateY(-8deg) rotateX(4deg) rotateZ(1deg); }
+  .hero-ring { width: 340px; height: 340px; margin: -170px 0 0 -170px; }
+  .hero-ring-2 { width: 260px; height: 260px; margin: -130px 0 0 -130px; }
+  .float-card { display: none; }
+}
+@media (max-width: 380px) {
+  .device { --w: 206px; }
+}
+@media (min-width: 1024px) and (max-height: 860px) {
+  .hero-visual { padding-block: 16px; }
+  .device { --w: 232px; }
+  .hero-ring { width: 400px; height: 400px; margin: -200px 0 0 -200px; }
+  .hero-ring-2 { width: 300px; height: 300px; margin: -150px 0 0 -150px; }
 }

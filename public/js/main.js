@@ -77,6 +77,42 @@
     updateParallax();
   }
 
+  /* ---------- Hero phone: cracked → diagnosed → scanning → ready → fixed ---------- */
+  var screen = document.querySelector(".device-screen");
+  if (screen) {
+    var STAGES = [1500, 1300, 2600, 1000, 3400]; // ms spent in stages 0–4
+    var stage = 0;
+
+    var setStage = function (n) {
+      stage = n;
+      for (var i = 1; i <= 4; i++) screen.classList.toggle("is-s" + i, n >= i);
+      screen.classList.toggle("is-stage-2", n === 2);
+    };
+
+    if (reduceMotion) {
+      setStage(4); // show the finished, fixed state without animating
+    } else {
+      var tick = function () {
+        setTimeout(function () {
+          setStage((stage + 1) % STAGES.length);
+          tick();
+        }, STAGES[stage]);
+      };
+      setStage(0);
+      tick();
+    }
+
+    var timeEl = screen.querySelector("[data-nz-time]");
+    var updateTime = function () {
+      try {
+        timeEl.textContent = new Intl.DateTimeFormat("en-NZ", {
+          timeZone: TIMEZONE, hour: "numeric", minute: "2-digit", hour12: false
+        }).format(new Date());
+      } catch (e) { /* keep default */ }
+    };
+    if (timeEl) { updateTime(); setInterval(updateTime, 30 * 1000); }
+  }
+
   /* ---------- Cursor spotlight on cards ---------- */
   if (window.matchMedia("(hover: hover)").matches) {
     document.querySelectorAll("[data-spotlight]").forEach(function (card) {
