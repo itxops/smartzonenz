@@ -1,9 +1,9 @@
 {
   "name": "SmartZone — Phone Repair Timaru",
   "short_name": "SmartZone",
-  "icons": [{ "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }],
+  "icons": [{ "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }],
   "theme_color": "#0F1115",
   "background_color": "#0F1115",
   "display": "standalone",
-  "start_url": "/"
+  "start_url": "./"
 }
