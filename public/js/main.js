@@ -1,256 +1,85 @@
-/* SmartZone — site interactions (vanilla JS, no dependencies) */
-(function () {
-  "use strict";
-
-  var OPEN_HOUR = 9;   // 9am
-  var CLOSE_HOUR = 17; // 5pm
-  var TIMEZONE = "Pacific/Auckland";
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  /* ---------- Mobile menu ---------- */
-  var menuBtn = document.getElementById("menu-btn");
-  var menu = document.getElementById("mobile-menu");
-
-  function setMenu(open) {
-    menuBtn.setAttribute("aria-expanded", String(open));
-    menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-    menu.classList.toggle("is-open", open);
-  }
-
-  if (menuBtn && menu) {
-    menuBtn.addEventListener("click", function () {
-      setMenu(menuBtn.getAttribute("aria-expanded") !== "true");
+// SmartZone NZ — Interactive Engine & Status Tracker
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. FAQ Accordion: Allow only one item open at a time
+  const faqItems = document.querySelectorAll('.faq-item');
+  faqItems.forEach(item => {
+    item.addEventListener('toggle', () => {
+      if (item.open) {
+        faqItems.forEach(other => {
+          if (other !== item) other.removeAttribute('open');
+        });
+      }
     });
-    menu.addEventListener("click", function (e) {
-      if (e.target.closest("a")) setMenu(false);
-    });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") setMenu(false);
-    });
-  }
-
-  /* ---------- Header state, scroll progress, call bar, back-to-top ---------- */
-  var header = document.querySelector(".site-header");
-  var callBar = document.querySelector(".call-bar");
-  var toTop = document.querySelector(".to-top");
-  var progress = document.querySelector(".scroll-progress span");
-  var hero = document.querySelector(".hero");
-  var ticking = false;
-
-  function onScroll() {
-    var y = window.scrollY;
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    header.classList.toggle("is-scrolled", y > 10);
-    if (progress) progress.style.setProperty("--p", max > 0 ? (y / max).toFixed(4) : 0);
-
-    var pastHero = hero ? y > hero.offsetHeight * 0.6 : y > 600;
-    var nearBottom = window.innerHeight + y >= document.documentElement.scrollHeight - 120;
-    if (callBar) callBar.classList.toggle("is-visible", pastHero && !nearBottom);
-    if (toTop) toTop.classList.toggle("is-visible", pastHero);
-    ticking = false;
-  }
-  window.addEventListener("scroll", function () {
-    if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
-  }, { passive: true });
-  onScroll();
-
-  /* ---------- Subtle parallax (uses the `translate` property so existing transforms stay intact) ---------- */
-  var parallaxEls = reduceMotion ? [] : Array.prototype.slice.call(document.querySelectorAll("[data-parallax]"));
-  var parallaxTicking = false;
-
-  function updateParallax() {
-    var vh = window.innerHeight;
-    parallaxEls.forEach(function (el) {
-      var r = el.getBoundingClientRect();
-      if (r.bottom < -200 || r.top > vh + 200) return;
-      var speed = parseFloat(el.getAttribute("data-parallax")) || 0;
-      var offset = (r.top + r.height / 2 - vh / 2) * speed;
-      el.style.translate = "0 " + Math.max(-60, Math.min(60, offset)).toFixed(1) + "px";
-    });
-    parallaxTicking = false;
-  }
-  if (parallaxEls.length) {
-    window.addEventListener("scroll", function () {
-      if (!parallaxTicking) { parallaxTicking = true; requestAnimationFrame(updateParallax); }
-    }, { passive: true });
-    window.addEventListener("resize", updateParallax);
-    updateParallax();
-  }
-
-  /* ---------- Hero phone: cracked → diagnosed → scanning → ready → fixed ---------- */
-  var screen = document.querySelector(".device-screen");
-  if (screen) {
-    var STAGES = [1500, 1300, 2600, 1000, 3400]; // ms spent in stages 0–4
-    var stage = 0;
-
-    var setStage = function (n) {
-      stage = n;
-      for (var i = 1; i <= 4; i++) screen.classList.toggle("is-s" + i, n >= i);
-      screen.classList.toggle("is-stage-2", n === 2);
-    };
-
-    if (reduceMotion) {
-      setStage(4); // show the finished, fixed state without animating
-    } else {
-      var tick = function () {
-        setTimeout(function () {
-          setStage((stage + 1) % STAGES.length);
-          tick();
-        }, STAGES[stage]);
-      };
-      setStage(0);
-      tick();
-    }
-
-    var timeEl = screen.querySelector("[data-nz-time]");
-    var updateTime = function () {
-      try {
-        timeEl.textContent = new Intl.DateTimeFormat("en-NZ", {
-          timeZone: TIMEZONE, hour: "numeric", minute: "2-digit", hour12: false
-        }).format(new Date());
-      } catch (e) { /* keep default */ }
-    };
-    if (timeEl) { updateTime(); setInterval(updateTime, 30 * 1000); }
-  }
-
-  /* ---------- Cursor spotlight on cards ---------- */
-  if (window.matchMedia("(hover: hover)").matches) {
-    document.querySelectorAll("[data-spotlight]").forEach(function (card) {
-      card.addEventListener("pointermove", function (e) {
-        var r = card.getBoundingClientRect();
-        card.style.setProperty("--mx", (e.clientX - r.left) + "px");
-        card.style.setProperty("--my", (e.clientY - r.top) + "px");
-      });
-    });
-  }
-
-  /* ---------- Active nav link ---------- */
-  var navLinks = document.querySelectorAll(".nav a[href^='#']");
-  if ("IntersectionObserver" in window && navLinks.length) {
-    var byId = {};
-    navLinks.forEach(function (a) { byId[a.getAttribute("href").slice(1)] = a; });
-
-    var sectionObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        navLinks.forEach(function (a) { a.classList.remove("is-active"); });
-        var link = byId[entry.target.id];
-        if (link) link.classList.add("is-active");
-      });
-    }, { rootMargin: "-45% 0px -50% 0px" });
-
-    Object.keys(byId).forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) sectionObserver.observe(el);
-    });
-  }
-
-  /* ---------- Reveal on scroll (staggered within each group) ---------- */
-  var revealEls = document.querySelectorAll("[data-reveal]");
-  revealEls.forEach(function (el) {
-    var siblings = Array.prototype.filter.call(el.parentElement.children, function (c) {
-      return c.hasAttribute("data-reveal");
-    });
-    var index = siblings.indexOf(el);
-    if (index > 0) el.style.setProperty("--d", Math.min(index, 6) * 90 + "ms");
   });
 
-  if ("IntersectionObserver" in window && !reduceMotion) {
-    var revealObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          var el = entry.target;
-          el.classList.add("is-visible");
-          revealObserver.unobserve(el);
-          // Hand control back to the element's own hover transitions once revealed
-          var delay = parseInt(el.style.getPropertyValue("--d"), 10) || 0;
-          setTimeout(function () {
-            el.removeAttribute("data-reveal");
-            el.classList.remove("is-visible");
-            el.style.removeProperty("--d");
-          }, 950 + delay);
+  // 2. Mobile Navigation Drawer
+  const mobileToggle = document.getElementById('mobileNavToggle');
+  const navLinks = document.getElementById('navLinks');
+  if (mobileToggle && navLinks) {
+    mobileToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('mobile-open');
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('mobile-open');
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!navLinks.contains(e.target) && !mobileToggle.contains(e.target)) {
+        navLinks.classList.remove('mobile-open');
+      }
+    });
+  }
+
+  // 3. Live Store Open / Closed Status (Pacific/Auckland timezone)
+  const statusPills = document.querySelectorAll('.status-pill');
+  if (statusPills.length > 0) {
+    function updateStoreStatus() {
+      try {
+        const now = new Date();
+        const nzDate = new Date(now.toLocaleString('en-US', { timeZone: 'Pacific/Auckland' }));
+        const day = nzDate.getDay(); // 0 = Sunday, 6 = Saturday
+        const hour = nzDate.getHours();
+        const minute = nzDate.getMinutes();
+        const timeDecimal = hour + minute / 60;
+
+        let isOpen = false;
+        let statusText = 'Open Today';
+
+        // Hours: Mon-Fri 9:00 - 17:30, Sat 9:30 - 16:30, Sun 10:00 - 15:00
+        if (day >= 1 && day <= 5) {
+          isOpen = timeDecimal >= 9.0 && timeDecimal < 17.5;
+          statusText = isOpen ? 'Open Today · Closes 5:30pm' : (timeDecimal < 9.0 ? 'Opens 9am Today' : 'Closed · Opens 9am Mon–Fri');
+        } else if (day === 6) {
+          isOpen = timeDecimal >= 9.5 && timeDecimal < 16.5;
+          statusText = isOpen ? 'Open Today · Closes 4:30pm' : (timeDecimal < 9.5 ? 'Opens 9:30am Today' : 'Closed · Opens 10am Sun');
+        } else {
+          isOpen = timeDecimal >= 10.0 && timeDecimal < 15.0;
+          statusText = isOpen ? 'Open Today · Closes 3pm' : (timeDecimal < 10.0 ? 'Opens 10am Today' : 'Closed · Opens 9am Mon');
         }
-      });
-    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
-    revealEls.forEach(function (el) { revealObserver.observe(el); });
-  } else {
-    revealEls.forEach(function (el) { el.classList.add("is-visible"); });
+
+        statusPills.forEach(pill => {
+          const textSpan = pill.querySelector('span:not(.pulse-dot)');
+          const dot = pill.querySelector('.pulse-dot');
+          if (textSpan) textSpan.textContent = isOpen ? 'Open Today' : 'Closed Now';
+          if (dot) {
+            dot.style.background = isOpen ? '#10b981' : '#f59e0b';
+            dot.style.boxShadow = isOpen ? '' : 'none';
+          }
+          pill.setAttribute('title', statusText);
+        });
+      } catch (err) {
+        // Fallback default
+      }
+    }
+    updateStoreStatus();
+    setInterval(updateStoreStatus, 60000);
   }
 
-  /* ---------- Count-up stats ---------- */
-  var counters = document.querySelectorAll("[data-count]");
-  function animateCount(el) {
-    var target = parseInt(el.getAttribute("data-count"), 10);
-    var duration = 1600;
-    var start = null;
-    function tick(ts) {
-      if (!start) start = ts;
-      var p = Math.min((ts - start) / duration, 1);
-      var eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = Math.round(target * eased).toLocaleString("en-NZ");
-      if (p < 1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }
-  if ("IntersectionObserver" in window && !reduceMotion) {
-    var countObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          animateCount(entry.target);
-          countObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.6 });
-    counters.forEach(function (el) { countObserver.observe(el); });
-  }
-
-  /* ---------- Live open / closed status (NZ time) ---------- */
-  function nzHour() {
-    try {
-      var parts = new Intl.DateTimeFormat("en-NZ", {
-        timeZone: TIMEZONE, hour: "numeric", minute: "numeric", hourCycle: "h23"
-      }).formatToParts(new Date());
-      var h = 0, m = 0;
-      parts.forEach(function (p) {
-        if (p.type === "hour") h = parseInt(p.value, 10);
-        if (p.type === "minute") m = parseInt(p.value, 10);
-      });
-      return h + m / 60;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  function updateOpenStatus() {
-    var h = nzHour();
-    if (h === null) return;
-    var isOpen = h >= OPEN_HOUR && h < CLOSE_HOUR;
-    var opensToday = h < OPEN_HOUR;
-
-    var badge = document.querySelector(".status-badge");
-    var badgeText = document.querySelector("[data-open-status]");
-    var shortText = document.querySelector("[data-open-short]");
-    var pill = document.querySelector("[data-open-pill]");
-
-    if (badge && badgeText) {
-      badge.classList.toggle("is-closed", !isOpen);
-      badgeText.textContent = isOpen
-        ? "Open Now · Same-Day Repairs"
-        : (opensToday ? "Opens Today at 9am" : "Closed · Opens Tomorrow 9am");
-    }
-    if (shortText) {
-      shortText.textContent = isOpen ? "Open Today Until 5pm" : "Open Daily 9am – 5pm";
-    }
-    if (pill) {
-      pill.hidden = false;
-      pill.textContent = isOpen ? "Open now" : "Closed now";
-      pill.className = "open-pill " + (isOpen ? "is-open" : "is-closed");
-    }
-  }
-  updateOpenStatus();
-  setInterval(updateOpenStatus, 60 * 1000);
-
-  /* ---------- Footer year ---------- */
-  var year = document.querySelector("[data-year]");
-  if (year) year.textContent = new Date().getFullYear();
-})();
+  // 4. Dynamic Year
+  const yearEls = document.querySelectorAll('[data-year]');
+  const currentYear = new Date().getFullYear();
+  yearEls.forEach(el => { el.textContent = currentYear; });
+});
