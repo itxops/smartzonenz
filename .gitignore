@@ -1,4 +1,5 @@
 node_modules/
+firebase-cli.exe
 .firebase/
 firebase-debug.log*
 *.log
