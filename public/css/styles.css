@@ -588,6 +588,7 @@ h1 em, h2 em { font-size: 1.05em; line-height: .9; padding-right: .04em; }
 .why-grid .section-head { margin-bottom: 40px; }
 
 .features { display: grid; gap: 16px; }
+.why-page-link { margin-top: 24px; }
 @media (min-width: 640px) { .features { grid-template-columns: repeat(2, 1fr); } }
 .feature {
   position: relative; overflow: hidden; padding: 26px; border-radius: var(--radius);

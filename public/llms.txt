@@ -1,0 +1,24 @@
+# SmartZone
+
+> SmartZone is a device repair workshop in Timaru, New Zealand.
+
+## Official website
+
+- https://smartzonenz.co.nz/
+- Preferred business name: SmartZone
+- Location: 257 Stafford Street, Timaru 7910, New Zealand
+- Phone: +64 3 927 2312
+- Opening hours shown on the website: daily, 9am-5pm
+
+## Pages
+
+- [Phone and device repair services](https://smartzonenz.co.nz/#services): overview of repairs and supported devices.
+- [Screen repair in Timaru](https://smartzonenz.co.nz/screen-repair-timaru): screen fault diagnosis and repair information.
+- [Phone battery replacement in Timaru](https://smartzonenz.co.nz/phone-battery-repair-timaru): battery issue and replacement information.
+- [Water-damaged phone repair in Timaru](https://smartzonenz.co.nz/water-damage-phone-repair-timaru): safe first steps and assessment information.
+- [Why choose SmartZone](https://smartzonenz.co.nz/why-choose-smartzone): workshop, service and repair policy information.
+- [Contact and visit information](https://smartzonenz.co.nz/#visit): address, hours, phone and map.
+
+## Sitemap
+
+- https://smartzonenz.co.nz/sitemap.xml

@@ -1,8 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://smartzonenz.co.nz/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-11-25</lastmod>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/hero/hero-tech-workshop.jpg</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/smartzone-logo.png</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/devices/smartphones-880.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/devices/tablets-880.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/devices/laptops-880.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/devices/consoles-880.jpg</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/services/screen-960.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/services/battery-960.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/services/water-960.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/services/signal-960.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/services/audio-960.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/services/software-960.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/accessories/cases-700.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/accessories/cables-700.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/accessories/earbuds-700.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/accessories/headphones-700.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/accessories/speaker-700.webp</image:loc></image:image>
+    <image:image><image:loc>https://smartzonenz.co.nz/images/accessories/apple-watch-700.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://smartzonenz.co.nz/why-choose-smartzone</loc>
+    <lastmod>2026-11-25</lastmod>
+  </url>
+  <url>
+    <loc>https://smartzonenz.co.nz/screen-repair-timaru</loc>
+    <lastmod>2026-11-25</lastmod>
+  </url>
+  <url>
+    <loc>https://smartzonenz.co.nz/phone-battery-repair-timaru</loc>
+    <lastmod>2026-11-25</lastmod>
+  </url>
+  <url>
+    <loc>https://smartzonenz.co.nz/water-damage-phone-repair-timaru</loc>
+    <lastmod>2026-11-25</lastmod>
   </url>
 </urlset>
